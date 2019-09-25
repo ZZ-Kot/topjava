@@ -4,3 +4,8 @@ target
 *.iml
 log
 *.patch
+
+#Eclipse
+/.classpath
+/.project
+/.settings/
