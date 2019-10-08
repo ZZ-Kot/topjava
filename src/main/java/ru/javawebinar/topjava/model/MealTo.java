@@ -23,8 +23,24 @@ public class MealTo {
 //    public Boolean getExcess() {
 //        return excess.get();
 //    }
+    
+    public LocalDateTime getDateTime() {
+		return dateTime;
+	}
 
-    @Override
+	public String getDescription() {
+		return description;
+	}
+
+	public int getCalories() {
+		return calories;
+	}
+
+	public boolean isExcess() {
+		return excess;
+	}
+
+	@Override
     public String toString() {
         return "MealTo{" +
                 "dateTime=" + dateTime +
