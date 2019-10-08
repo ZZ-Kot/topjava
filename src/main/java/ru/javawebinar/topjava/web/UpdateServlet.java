@@ -18,10 +18,9 @@ import org.slf4j.Logger;
 
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealTo;
-import ru.javawebinar.topjava.util.MealsUtil;
 
-public class MealServlet extends HttpServlet {
-    private static final Logger log = getLogger(MealServlet.class);
+public class UpdateServlet extends HttpServlet {
+    private static final Logger log = getLogger(UpdateServlet.class);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -30,12 +29,9 @@ public class MealServlet extends HttpServlet {
     
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        log.debug("redirect to meals");
+        log.debug("redirect to update");
 
-        HttpSession s = request.getSession();
-        
-        s.setAttribute("mealsTo", MealsUtil.getAll());
 //        request.getRequestDispatcher("/users.jsp").forward(request, response);
-        response.sendRedirect("meals.jsp");
+        response.sendRedirect("update.jsp");
     }
 }

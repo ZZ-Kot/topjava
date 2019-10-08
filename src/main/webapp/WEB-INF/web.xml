@@ -6,24 +6,61 @@
 
     <display-name>Topjava</display-name>
 
+	<!-- UserServlet -->
     <servlet>
         <servlet-name>userServlet</servlet-name>
         <servlet-class>ru.javawebinar.topjava.web.UserServlet</servlet-class>
         <load-on-startup>0</load-on-startup>
     </servlet>
+    <!-- MealServlet -->
     <servlet>
         <servlet-name>mealServlet</servlet-name>
         <servlet-class>ru.javawebinar.topjava.web.MealServlet</servlet-class>
         <load-on-startup>0</load-on-startup>
     </servlet>
-    
+    <!-- CreateServlet -->
+    <servlet>
+        <servlet-name>createServlet</servlet-name>
+        <servlet-class>ru.javawebinar.topjava.web.CreateServlet</servlet-class>
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+    <!-- UpdateServlet -->
+    <servlet>
+        <servlet-name>updateServlet</servlet-name>
+        <servlet-class>ru.javawebinar.topjava.web.UpdateServlet</servlet-class>
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+    <!-- DeleteServlet -->
+    <servlet>
+        <servlet-name>deleteServlet</servlet-name>
+        <servlet-class>ru.javawebinar.topjava.web.DeleteServlet</servlet-class>
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+
+    <!-- UserServlet -->
     <servlet-mapping>
         <servlet-name>userServlet</servlet-name>
         <url-pattern>/users</url-pattern>
     </servlet-mapping>
+    <!-- MealServlet -->
     <servlet-mapping>
         <servlet-name>mealServlet</servlet-name>
         <url-pattern>/topjava</url-pattern>
+    </servlet-mapping>
+    <!-- CreateServlet -->
+    <servlet-mapping>
+        <servlet-name>createServlet</servlet-name>
+        <url-pattern>/create</url-pattern>
+    </servlet-mapping>
+    <!-- UpdateServlet -->
+    <servlet-mapping>
+        <servlet-name>updateServlet</servlet-name>
+        <url-pattern>/update</url-pattern>
+    </servlet-mapping>
+    <!-- DeleteServlet -->
+    <servlet-mapping>
+        <servlet-name>deleteServlet</servlet-name>
+        <url-pattern>/delete</url-pattern>
     </servlet-mapping>
 
 </web-app>

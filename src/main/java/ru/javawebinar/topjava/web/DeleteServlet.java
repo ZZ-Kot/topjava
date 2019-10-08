@@ -20,8 +20,8 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealTo;
 import ru.javawebinar.topjava.util.MealsUtil;
 
-public class MealServlet extends HttpServlet {
-    private static final Logger log = getLogger(MealServlet.class);
+public class DeleteServlet extends HttpServlet {
+    private static final Logger log = getLogger(DeleteServlet.class);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -30,12 +30,12 @@ public class MealServlet extends HttpServlet {
     
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        log.debug("redirect to meals");
-
-        HttpSession s = request.getSession();
+        log.debug("redirect to delete");
         
-        s.setAttribute("mealsTo", MealsUtil.getAll());
+        MealsUtil.deleteOne(Long.parseLong(request.getParameter("id")));
+//        System.out.println(request.getParameter("id"));
+
 //        request.getRequestDispatcher("/users.jsp").forward(request, response);
-        response.sendRedirect("meals.jsp");
+        response.sendRedirect("/topjava");
     }
 }

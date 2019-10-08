@@ -17,6 +17,8 @@
 			<th>Дата/Время</th>
 			<th>Описание</th>
 			<th>Калории</th>
+			<th>Редактировать</th>
+			<th>Удалить</th>
 		</tr>
 		<c:forEach var="meal" items="${mealsTo}">
 			<c:choose>
@@ -27,12 +29,26 @@
 					<tr bgcolor="GREEN">
 				</c:otherwise>
 			</c:choose>
-				<td>${meal.dateTime}</td>
-				<td>${meal.description}</td>
-				<td>${meal.calories}</td>
-				</tr>
+			<td>${meal.dateTime}</td>
+			<td>${meal.description}</td>
+			<td>${meal.calories}</td>
+			<td><form action="update">
+					<input type="hidden" name="id" value="${meal.id}" />
+					<input type="submit" value="Редактировать"/>
+				</form></td>
+			<td><form action="delete">
+					<input type="hidden" name="id" value="${meal.id}" />
+					<input type="submit" value="Удалить"/>
+				</form></td>
+			</tr>
 		</c:forEach>
 	</table>
+
+	<td>
+		<form action="create">
+			<input type="submit" value="Создать"/>
+		</form>
+	</td>
 
 </body>
 </html>
