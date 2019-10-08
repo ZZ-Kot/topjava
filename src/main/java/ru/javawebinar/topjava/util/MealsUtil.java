@@ -74,8 +74,9 @@ public class MealsUtil {
      * Fake delete.
      * Remove or fix me.
      * */
-    public static void deleteOne(long id) {
-        mealsTo.remove(id);
+    public static void delete(long id) {
+        mealsTo.remove((int)id);
+        mealsCount--;
     }
     
 //    public static List<MealTo> getFiltered(List<Meal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
