@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealTo;
+import ru.javawebinar.topjava.util.MealsUtil;
 
 public class UpdateServlet extends HttpServlet {
     private static final Logger log = getLogger(UpdateServlet.class);
@@ -31,7 +32,35 @@ public class UpdateServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.debug("redirect to update");
 
-//        request.getRequestDispatcher("/users.jsp").forward(request, response);
-        response.sendRedirect("update.jsp");
+        synchronized (request) {
+			request.setCharacterEncoding("UTF-8");
+			String updateRequestParam = request.getParameter("update");
+			if (updateRequestParam == null) {
+				Long id = Long.parseLong(request.getParameter("id"));
+				HttpSession s = request.getSession();
+				s.setAttribute("meal", MealsUtil.getOne(id));
+				response.sendRedirect("update.jsp");
+			} else {
+				String description = request.getParameter("description");
+				String calories = request.getParameter("calories");
+				if (description == null || calories == null || description.isEmpty() || calories.isEmpty()) {
+					Long id = Long.parseLong(request.getParameter("id"));
+					HttpSession s = request.getSession();
+					s.setAttribute("meal", MealsUtil.getOne(id));
+					request.getRequestDispatcher("update.jsp").forward(request, response);
+				} else {
+					Long id = Long.parseLong(request.getParameter("id"));
+					LocalDateTime dateTime = LocalDateTime.now();
+
+					MealsUtil.getOne(id).setDateTime(dateTime);
+					MealsUtil.getOne(id).setDescription(description);
+					MealsUtil.getOne(id).setCalories(Integer.parseInt(calories));
+					MealsUtil.getOne(id).setExcess(false);
+
+					response.sendRedirect("meals.jsp");
+				}
+			}
+		}
     }
+
 }

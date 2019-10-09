@@ -32,19 +32,10 @@ public class DeleteServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.debug("redirect to delete");
         
-        
-        Long id = Long.parseLong(request.getParameter("id"));
-        
-        log.debug("id " + id);
-        
-        MealsUtil.delete(id);
-        
-        for (MealTo m : MealsUtil.getAll()) {
-        	System.out.println(m.getId() + " " + m.getDescription());
-        }
-//        System.out.println(request.getParameter("id"));
-
-//        request.getRequestDispatcher("/users.jsp").forward(request, response);
-        response.sendRedirect("meals.jsp");
+        synchronized (request) {
+			Long id = Long.parseLong(request.getParameter("id"));
+			MealsUtil.delete(id);
+		}
+		response.sendRedirect("meals.jsp");
     }
 }

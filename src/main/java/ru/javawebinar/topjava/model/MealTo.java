@@ -5,17 +5,17 @@ import java.time.LocalDateTime;
 
 public class MealTo implements Serializable {
 	
-	private final Long id;
+	private Long id;
 	
-    private final LocalDateTime dateTime;
+    private LocalDateTime dateTime;
 
-    private final String description;
+    private String description;
 
-    private final int calories;
+    private int calories;
 
 //    private final Supplier<Boolean> excess;
 //    private final AtomicBoolean excess;
-    private final boolean excess;
+    private boolean excess;
 
     public MealTo(Long id, LocalDateTime dateTime, String description, int calories, boolean excess) {
         this.id = id;
@@ -28,34 +28,51 @@ public class MealTo implements Serializable {
 //    public Boolean getExcess() {
 //        return excess.get();
 //    }
-    
-    public Long getId() {
-    	return id;
-    }
-    
-    public LocalDateTime getDateTime() {
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public LocalDateTime getDateTime() {
 		return dateTime;
+	}
+
+	public void setDateTime(LocalDateTime dateTime) {
+		this.dateTime = dateTime;
 	}
 
 	public String getDescription() {
 		return description;
 	}
 
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	public int getCalories() {
 		return calories;
 	}
 
+	public void setCalories(int calories) {
+		this.calories = calories;
+	}
+	
 	public boolean isExcess() {
 		return excess;
 	}
 
+	public void setExcess(boolean excess) {
+		this.excess = excess;
+	}
+
 	@Override
-    public String toString() {
-        return "MealTo{" +
-                "dateTime=" + dateTime +
-                ", description='" + description + '\'' +
-                ", calories=" + calories +
-                ", excess=" + excess +
-                '}';
-    }
+	public String toString() {
+		return "MealTo [id=" + id + ", dateTime=" + dateTime + ", description=" + description + ", calories=" + calories
+				+ ", excess=" + excess + "]";
+	}
+
 }

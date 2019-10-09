@@ -33,19 +33,22 @@ public class CreateServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		log.debug("redirect to create");
 
-		String description = request.getParameter("description");
-		String calories = request.getParameter("calories");
+		synchronized (request) {
+			request.setCharacterEncoding("UTF-8");
+			String description = request.getParameter("description");
+			String calories = request.getParameter("calories");
+			if (description == null || calories == null || description.isEmpty() || calories.isEmpty()) {
+				response.sendRedirect("create.jsp");
+			} else {
+				Long id = MealsUtil.mealsCount++;
+				LocalDateTime dateTime = LocalDateTime.now();
 
-		if (description == null || calories == null || description.isEmpty() || calories.isEmpty()) {
-			response.sendRedirect("create.jsp");
-		} else {
-			Long id = MealsUtil.mealsCount++;
-			LocalDateTime dateTime = LocalDateTime.now();
+				MealTo mealTo = new MealTo(id, dateTime, description, Integer.parseInt(calories), false);
 
-			MealTo mealTo = new MealTo(id, dateTime, description, Integer.parseInt(calories), false);
-
-			MealsUtil.create(mealTo);
-			response.sendRedirect("meals.jsp");
+				MealsUtil.create(mealTo);
+				response.sendRedirect("meals.jsp");
+			}
 		}
 	}
+
 }

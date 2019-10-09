@@ -55,6 +55,14 @@ public class MealsUtil {
     }
 
     /*
+     * Fake getOne.
+     * Remove or fix me.
+     * */
+    public static MealTo getOne(Long id) {
+        return mealsTo.get(id.intValue());
+    }
+
+    /*
      * Fake getAll.
      * Remove or fix me.
      * */
@@ -74,8 +82,8 @@ public class MealsUtil {
      * Fake delete.
      * Remove or fix me.
      * */
-    public static void delete(long id) {
-        mealsTo.remove((int)id);
+    public static void delete(Long id) {
+        mealsTo.remove(id.intValue());
         mealsCount--;
     }
     
