@@ -9,7 +9,17 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.springframework.stereotype.Repository;
+
+/*
+ * 3: Изменить MealRepository и InMemoryMealRepository таким образом,
+ * чтобы вся еда всех пользователей находилась в одном общем хранилище,
+ * но при этом каждый конкретный авторизованный пользователь мог видеть
+ * и редактировать только свою еду.
+ * */
+@Repository
 public class InMemoryMealRepository implements MealRepository {
+	
     private Map<Integer, Meal> repository = new ConcurrentHashMap<>();
     private AtomicInteger counter = new AtomicInteger(0);
 
@@ -17,6 +27,7 @@ public class InMemoryMealRepository implements MealRepository {
         MealsUtil.MEALS.forEach(this::save);
     }
 
+    
     @Override
     public Meal save(Meal meal) {
         if (meal.isNew()) {
@@ -39,8 +50,10 @@ public class InMemoryMealRepository implements MealRepository {
     }
 
     @Override
-    public Collection<Meal> getAll() {
+    public Collection<Meal> getAll(Integer id) {
         return repository.values();
+//    	return repository.forEach((i, m) -> m.getUserId() = id);
     }
+    
 }
 

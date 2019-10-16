@@ -1,9 +1,10 @@
-package ru.javawebinar.topjava.web.user;
+package ru.javawebinar.topjava.controller;
+
+import static ru.javawebinar.topjava.util.SecurityUtil.authUserId;
 
 import org.springframework.stereotype.Controller;
-import ru.javawebinar.topjava.model.User;
 
-import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
+import ru.javawebinar.topjava.model.User;
 
 @Controller
 public class ProfileRestController extends AbstractUserController {

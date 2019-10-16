@@ -4,34 +4,36 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public class Meal {
-    private Integer id;
+/*
+ * 2: сделать Meal extends AbstractBaseEntity,
+ * MealTo перенести в пакет ru.javawebinar.topjava.to (transfer objects)
+ * */
+/*
+ * 3.1: реализовать хранение еды для каждого пользователя можно с добавлением
+ * поля userId в Meal ИЛИ без него (как нравится). Напомню, что репозиторий один
+ * и приложение может работать одновременно с многими пользователями.
+ * */
+public class Meal extends AbstractBaseEntity {
 
     private final LocalDateTime dateTime;
-
     private final String description;
-
     private final int calories;
+    private final Integer userId;
 
+    
     public Meal(LocalDateTime dateTime, String description, int calories) {
-        this(null, dateTime, description, calories);
+        this(null, dateTime, description, calories, null);
     }
 
-    public Meal(Integer id, LocalDateTime dateTime, String description, int calories) {
-        this.id = id;
+    public Meal(Integer id, LocalDateTime dateTime, String description, int calories, Integer userId) {
+    	super(id);
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
+        this.userId = userId;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
+    
     public LocalDateTime getDateTime() {
         return dateTime;
     }
@@ -52,11 +54,11 @@ public class Meal {
         return dateTime.toLocalTime();
     }
 
-    public boolean isNew() {
-        return id == null;
-    }
+    public Integer getUserId() {
+		return userId;
+	}
 
-    @Override
+	@Override
     public String toString() {
         return "Meal{" +
                 "id=" + id +
@@ -65,4 +67,5 @@ public class Meal {
                 ", calories=" + calories +
                 '}';
     }
+    
 }

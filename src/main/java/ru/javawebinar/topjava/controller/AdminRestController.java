@@ -1,15 +1,17 @@
-package ru.javawebinar.topjava.web.user;
+package ru.javawebinar.topjava.controller;
 
 import org.springframework.stereotype.Controller;
+
 import ru.javawebinar.topjava.model.User;
 
+import java.util.Collection;
 import java.util.List;
 
 @Controller
 public class AdminRestController extends AbstractUserController {
 
     @Override
-    public List<User> getAll() {
+    public Collection<User> getAll() {
         return super.getAll();
     }
 

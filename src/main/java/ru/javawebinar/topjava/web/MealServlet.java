@@ -33,10 +33,12 @@ public class MealServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String id = request.getParameter("id");
 
-        Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
-                LocalDateTime.parse(request.getParameter("dateTime")),
-                request.getParameter("description"),
-                Integer.parseInt(request.getParameter("calories")));
+        Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id)
+                , LocalDateTime.parse(request.getParameter("dateTime"))
+                , request.getParameter("description")
+                , Integer.parseInt(request.getParameter("calories"))
+                , Integer.parseInt(request.getParameter("userId"))
+                );
 
         log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
         repository.save(meal);
@@ -65,8 +67,9 @@ public class MealServlet extends HttpServlet {
             case "all":
             default:
                 log.info("getAll");
+                int userId = Integer.parseInt(request.getParameter("userId"));
                 request.setAttribute("meals",
-                        MealsUtil.getTos(repository.getAll(), MealsUtil.DEFAULT_CALORIES_PER_DAY));
+                        MealsUtil.getTos(repository.getAll(userId), MealsUtil.DEFAULT_CALORIES_PER_DAY));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
         }
