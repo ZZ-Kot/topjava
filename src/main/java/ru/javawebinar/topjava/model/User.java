@@ -1,13 +1,14 @@
 package ru.javawebinar.topjava.model;
 
+import static ru.javawebinar.topjava.util.MealsUtil.DEFAULT_CALORIES_PER_DAY;
+
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.Set;
 
-import static ru.javawebinar.topjava.util.MealsUtil.DEFAULT_CALORIES_PER_DAY;
+public class User extends AbstractBaseEntity {
 
-public class User extends AbstractNamedEntity {
-
+	private String name;
     private String email;
     private String password;
     private boolean enabled = true;
@@ -21,16 +22,25 @@ public class User extends AbstractNamedEntity {
     }
 
     public User(Integer id, String name, String email, String password, int caloriesPerDay, boolean enabled, Set<Role> roles) {
-        super(id, name);
+        super(id);
+        this.name = name;
         this.email = email;
         this.password = password;
         this.caloriesPerDay = caloriesPerDay;
         this.enabled = enabled;
         this.roles = roles;
     }
-
     
-    public String getEmail() {
+    
+    public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getEmail() {
         return email;
     }
 
@@ -74,16 +84,11 @@ public class User extends AbstractNamedEntity {
         return password;
     }
 
-    @Override
-    public String toString() {
-        return "User (" +
-                "id=" + id +
-                ", email=" + email +
-                ", name=" + name +
-                ", enabled=" + enabled +
-                ", roles=" + roles +
-                ", caloriesPerDay=" + caloriesPerDay +
-                ')';
-    }
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + ", enabled="
+				+ enabled + ", registered=" + registered + ", roles=" + roles + ", caloriesPerDay=" + caloriesPerDay
+				+ "]";
+	}
     
 }

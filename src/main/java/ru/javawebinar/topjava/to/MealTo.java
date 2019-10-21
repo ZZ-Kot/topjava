@@ -6,6 +6,10 @@ import java.time.LocalDateTime;
  * 2: сделать Meal extends AbstractBaseEntity,
  * MealTo перенести в пакет ru.javawebinar.topjava.to (transfer objects)
  * */
+/*
+ * 4.4: конвертацию в MealTo можно делать как в слое web, так и в service
+ * (Mapping Entity->DTO: Controller or Service?)
+ * */
 public class MealTo {
 
 	private final Integer id;

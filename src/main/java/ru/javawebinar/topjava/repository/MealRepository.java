@@ -1,8 +1,10 @@
 package ru.javawebinar.topjava.repository;
 
-import ru.javawebinar.topjava.model.Meal;
+import java.util.List;
 
-import java.util.Collection;
+import org.springframework.stereotype.Repository;
+
+import ru.javawebinar.topjava.model.Meal;
 
 /*
  * 3: Изменить MealRepository и InMemoryMealRepository таким образом,
@@ -10,15 +12,18 @@ import java.util.Collection;
  * но при этом каждый конкретный авторизованный пользователь мог видеть
  * и редактировать только свою еду.
  * */
+@Repository
 public interface MealRepository {
-    // null if not found, when updated
+
+	List<Meal> getAll(Integer userId);
+	
+	// null if not found
+	Meal getOne(int id);
+
+	// null if not found, when updated
     Meal save(Meal meal);
 
     // false if not found
     boolean delete(int id);
 
-    // null if not found
-    Meal get(int id);
-
-    Collection<Meal> getAll(Integer id);
 }

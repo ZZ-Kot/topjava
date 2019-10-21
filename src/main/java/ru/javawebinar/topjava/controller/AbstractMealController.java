@@ -9,31 +9,33 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.User;
+import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.service.UserService;
 
-public abstract class AbstractUserController {
+public abstract class AbstractMealController {
 	
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    private UserService service;
+	@Autowired
+    private MealService service;
     
 
-    public List<User> getAll() {
+    public List<Meal> getAll(Integer userId) {
         log.info("getAll");
-        return (List<User>) service.getAll();
+        return (List<Meal>) service.getAll(userId);
     }
 
-    public User getOne(int id) {
+    public Meal getOne(int id) {
         log.info("get {}", id);
         return service.get(id);
     }
 
-    public User create(User user) {
-        log.info("create {}", user);
-        checkNew(user);
-        return service.create(user);
+    public Meal create(Meal meal) {
+        log.info("create {}", meal);
+        checkNew(meal);
+        return service.create(meal);
     }
 
     public void delete(int id) {
@@ -41,15 +43,10 @@ public abstract class AbstractUserController {
         service.delete(id);
     }
 
-    public void update(User user, int id) {
-        log.info("update {} with id={}", user, id);
-        assureIdConsistent(user, id);
-        service.update(user);
+    public void update(Meal meal, int id) {
+        log.info("update {} with id={}", meal, id);
+        assureIdConsistent(meal, id);
+        service.update(meal);
     }
 
-    public User getByMail(String email) {
-        log.info("getByEmail {}", email);
-        return service.getByEmail(email);
-    }
-    
 }
