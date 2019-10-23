@@ -4,14 +4,23 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+/*
+ * 3.2. userId в класс Meal вставлять НЕ надо (для UI и REST это лишние данные,
+ * 		userId это id залогиненного пользователя)
+ * 3.3. JbdcTemplate работает через сеттеры. Вместе с конструктором по умолчанию
+ * 		их нужно добавить в Meal
+ * */
 public class Meal extends AbstractBaseEntity {
-    private final LocalDateTime dateTime;
+	
+	private String description;
+    private LocalDateTime dateTime;
+    private int calories;
 
-    private final String description;
+    
+    public Meal() {
+	}
 
-    private final int calories;
-
-    public Meal(LocalDateTime dateTime, String description, int calories) {
+	public Meal(LocalDateTime dateTime, String description, int calories) {
         this(null, dateTime, description, calories);
     }
 
@@ -22,19 +31,32 @@ public class Meal extends AbstractBaseEntity {
         this.calories = calories;
     }
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
-    }
 
     public String getDescription() {
-        return description;
-    }
+		return description;
+	}
 
-    public int getCalories() {
-        return calories;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public LocalDate getDate() {
+	public LocalDateTime getDateTime() {
+		return dateTime;
+	}
+
+	public void setDateTime(LocalDateTime dateTime) {
+		this.dateTime = dateTime;
+	}
+
+	public int getCalories() {
+		return calories;
+	}
+
+	public void setCalories(int calories) {
+		this.calories = calories;
+	}
+
+	public LocalDate getDate() {
         return dateTime.toLocalDate();
     }
 
@@ -51,4 +73,5 @@ public class Meal extends AbstractBaseEntity {
                 ", calories=" + calories +
                 '}';
     }
+    
 }

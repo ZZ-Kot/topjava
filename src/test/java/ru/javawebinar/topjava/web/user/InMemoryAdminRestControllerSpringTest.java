@@ -16,7 +16,10 @@ import java.util.Collection;
 
 import static ru.javawebinar.topjava.UserTestData.ADMIN;
 
-@ContextConfiguration("classpath:spring/spring-app.xml")
+@ContextConfiguration({
+    "classpath:spring/spring-app.xml",
+    "classpath:spring/spring-db.xml"
+})
 @RunWith(SpringRunner.class)
 public class InMemoryAdminRestControllerSpringTest {
 
@@ -28,13 +31,21 @@ public class InMemoryAdminRestControllerSpringTest {
 
     @Before
     public void setUp() throws Exception {
+    	System.out.println("before");
         repository.init();
     }
 
     @Test
     public void delete() throws Exception {
+    	System.out.println("delete");
         controller.delete(UserTestData.USER_ID);
+        
+        System.out.println("user test data user id " + UserTestData.USER_ID);
+        
         Collection<User> users = controller.getAll();
+        
+        users.forEach((u) -> System.out.println("user " + u.getId() + " " + u.getName()));
+        
         Assert.assertEquals(users.size(), 1);
         Assert.assertEquals(users.iterator().next(), ADMIN);
     }
