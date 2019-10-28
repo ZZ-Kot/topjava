@@ -1,6 +1,8 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -17,6 +19,13 @@ import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
+
+/*
+ * 3: Добавить в тесты MealServiceTest функциональность @Rule:
+ * 		3.1: проверку Exception
+ * 		3.2: вывод в лог времени выполнения каждого теста
+ * 		3.3: вывод сводки в конце класса: имя теста - время выполнения
+ * */
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
         "classpath:spring/spring-db.xml"
@@ -25,6 +34,9 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
 
+	@Rule
+	public final ExpectedException exception = ExpectedException.none();
+	
     @Autowired
     private MealService service;
 
