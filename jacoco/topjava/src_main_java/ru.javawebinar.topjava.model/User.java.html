@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>User.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">TestAllPackages (30 окт. 2019 г. 11:48:36)</a> &gt; <a href="../../index.html" class="el_group">topjava</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">ru.javawebinar.topjava.model</a> &gt; <span class="el_source">User.java</span></div><h1>User.java</h1><pre class="source lang-java linenums">package ru.javawebinar.topjava.model;
+
+import static ru.javawebinar.topjava.util.MealsUtil.DEFAULT_CALORIES_PER_DAY;
+
+import java.util.Collection;
+import java.util.Date;
+import java.util.EnumSet;
+import java.util.Set;
+
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.Range;
+import org.springframework.util.CollectionUtils;
+
+@NamedQueries({
+        @NamedQuery(name = User.DELETE, query = &quot;DELETE FROM User u WHERE u.id=:id&quot;),
+        @NamedQuery(name = User.BY_EMAIL, query = &quot;SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.email=?1&quot;),
+        @NamedQuery(name = User.ALL_SORTED, query = &quot;SELECT u FROM User u LEFT JOIN FETCH u.roles ORDER BY u.name, u.email&quot;),
+})
+@Entity
+@Table(name = &quot;users&quot;, uniqueConstraints = {@UniqueConstraint(columnNames = &quot;email&quot;, name = &quot;users_unique_email_idx&quot;)})
+public class User extends AbstractNamedEntity {
+
+    public static final String DELETE = &quot;User.delete&quot;;
+    public static final String BY_EMAIL = &quot;User.getByEmail&quot;;
+    public static final String ALL_SORTED = &quot;User.getAllSorted&quot;;
+
+    @Column(name = &quot;email&quot;, nullable = false, unique = true)
+    @Email
+    @NotBlank
+    @Size(max = 100)
+    private String email;
+
+    @Column(name = &quot;password&quot;, nullable = false)
+    @NotBlank
+    @Size(min = 5, max = 100)
+    private String password;
+
+    @Column(name = &quot;enabled&quot;, nullable = false, columnDefinition = &quot;bool default true&quot;)
+<span class="fc" id="L55">    private boolean enabled = true;</span>
+
+    @Column(name = &quot;registered&quot;, nullable = false, columnDefinition = &quot;timestamp default now()&quot;)
+    @NotNull
+<span class="fc" id="L59">    private Date registered = new Date();</span>
+
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = &quot;user_roles&quot;, joinColumns = @JoinColumn(name = &quot;user_id&quot;))
+    @Column(name = &quot;role&quot;)
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set&lt;Role&gt; roles;
+
+    @Column(name = &quot;calories_per_day&quot;, nullable = false, columnDefinition = &quot;int default 2000&quot;)
+    @Range(min = 10, max = 10000)
+<span class="fc" id="L69">    private int caloriesPerDay = DEFAULT_CALORIES_PER_DAY;</span>
+
+<span class="fc" id="L71">    public User() {</span>
+<span class="fc" id="L72">    }</span>
+
+    public User(User u) {
+<span class="nc" id="L75">        this(u.getId(), u.getName(), u.getEmail(), u.getPassword(), u.getCaloriesPerDay(), u.isEnabled(), u.getRegistered(), u.getRoles());</span>
+<span class="nc" id="L76">    }</span>
+
+    public User(Integer id, String name, String email, String password, Role role, Role... roles) {
+<span class="fc" id="L79">        this(id, name, email, password, DEFAULT_CALORIES_PER_DAY, true, new Date(), EnumSet.of(role, roles));</span>
+<span class="fc" id="L80">    }</span>
+
+    public User(Integer id, String name, String email, String password, int caloriesPerDay, boolean enabled, Date registered, Collection&lt;Role&gt; roles) {
+<span class="fc" id="L83">        super(id, name);</span>
+<span class="fc" id="L84">        this.email = email;</span>
+<span class="fc" id="L85">        this.password = password;</span>
+<span class="fc" id="L86">        this.caloriesPerDay = caloriesPerDay;</span>
+<span class="fc" id="L87">        this.enabled = enabled;</span>
+<span class="fc" id="L88">        this.registered = registered;</span>
+<span class="fc" id="L89">        setRoles(roles);</span>
+<span class="fc" id="L90">    }</span>
+
+    public String getEmail() {
+<span class="nc" id="L93">        return email;</span>
+    }
+
+    public void setEmail(String email) {
+<span class="nc" id="L97">        this.email = email;</span>
+<span class="nc" id="L98">    }</span>
+
+    public void setPassword(String password) {
+<span class="nc" id="L101">        this.password = password;</span>
+<span class="nc" id="L102">    }</span>
+
+    public Date getRegistered() {
+<span class="nc" id="L105">        return registered;</span>
+    }
+
+    public void setRegistered(Date registered) {
+<span class="nc" id="L109">        this.registered = registered;</span>
+<span class="nc" id="L110">    }</span>
+
+    public void setEnabled(boolean enabled) {
+<span class="nc" id="L113">        this.enabled = enabled;</span>
+<span class="nc" id="L114">    }</span>
+
+    public int getCaloriesPerDay() {
+<span class="nc" id="L117">        return caloriesPerDay;</span>
+    }
+
+    public void setCaloriesPerDay(int caloriesPerDay) {
+<span class="nc" id="L121">        this.caloriesPerDay = caloriesPerDay;</span>
+<span class="nc" id="L122">    }</span>
+
+    public boolean isEnabled() {
+<span class="nc" id="L125">        return enabled;</span>
+    }
+
+    public Set&lt;Role&gt; getRoles() {
+<span class="nc" id="L129">        return roles;</span>
+    }
+
+    public String getPassword() {
+<span class="nc" id="L133">        return password;</span>
+    }
+
+    public void setRoles(Collection&lt;Role&gt; roles) {
+<span class="pc bpc" id="L137" title="1 of 2 branches missed.">        this.roles = CollectionUtils.isEmpty(roles) ? EnumSet.noneOf(Role.class) : EnumSet.copyOf(roles);</span>
+<span class="fc" id="L138">    }</span>
+
+    @Override
+    public String toString() {
+<span class="nc" id="L142">        return &quot;User{&quot; +</span>
+<span class="nc" id="L143">                &quot;id=&quot; + id +</span>
+<span class="nc" id="L144">                &quot;, email=&quot; + email +</span>
+<span class="nc" id="L145">                &quot;, name=&quot; + name +</span>
+<span class="nc" id="L146">                &quot;, enabled=&quot; + enabled +</span>
+<span class="nc" id="L147">                &quot;, roles=&quot; + roles +</span>
+<span class="nc" id="L148">                &quot;, caloriesPerDay=&quot; + caloriesPerDay +</span>
+<span class="nc" id="L149">                '}';</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span>TestAllPackages (30 окт. 2019 г. 11:48:36)</div></body></html>

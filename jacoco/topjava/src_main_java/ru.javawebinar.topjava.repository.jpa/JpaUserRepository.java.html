@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>JpaUserRepository.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">TestAllPackages (30 окт. 2019 г. 11:48:36)</a> &gt; <a href="../../index.html" class="el_group">topjava</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">ru.javawebinar.topjava.repository.jpa</a> &gt; <span class="el_source">JpaUserRepository.java</span></div><h1>JpaUserRepository.java</h1><pre class="source lang-java linenums">package ru.javawebinar.topjava.repository.jpa;
+
+import org.springframework.dao.support.DataAccessUtils;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+import ru.javawebinar.topjava.model.User;
+import ru.javawebinar.topjava.repository.UserRepository;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.List;
+
+@Repository
+@Transactional(readOnly = true)
+<span class="nc" id="L15">public class JpaUserRepository implements UserRepository {</span>
+
+/*
+    @Autowired
+    private SessionFactory sessionFactory;
+
+    private Session openSession() {
+        return sessionFactory.getCurrentSession();
+    }
+*/
+
+    @PersistenceContext
+    private EntityManager em;
+
+    @Override
+    @Transactional
+    public User save(User user) {
+<span class="nc bnc" id="L32" title="All 2 branches missed.">        if (user.isNew()) {</span>
+<span class="nc" id="L33">            em.persist(user);</span>
+<span class="nc" id="L34">            return user;</span>
+        } else {
+<span class="nc" id="L36">            return em.merge(user);</span>
+        }
+    }
+
+    @Override
+    public User get(int id) {
+<span class="nc" id="L42">        return em.find(User.class, id);</span>
+    }
+
+    @Override
+    @Transactional
+    public boolean delete(int id) {
+
+/*      User ref = em.getReference(User.class, id);
+        em.remove(ref);
+
+        Query query = em.createQuery(&quot;DELETE FROM User u WHERE u.id=:id&quot;);
+        return query.setParameter(&quot;id&quot;, id).executeUpdate() != 0;
+*/
+<span class="nc bnc" id="L55" title="All 2 branches missed.">        return em.createNamedQuery(User.DELETE)</span>
+<span class="nc" id="L56">                .setParameter(&quot;id&quot;, id)</span>
+<span class="nc" id="L57">                .executeUpdate() != 0;</span>
+    }
+
+    @Override
+    public User getByEmail(String email) {
+<span class="nc" id="L62">        List&lt;User&gt; users = em.createNamedQuery(User.BY_EMAIL, User.class)</span>
+<span class="nc" id="L63">                .setParameter(1, email)</span>
+<span class="nc" id="L64">                .getResultList();</span>
+<span class="nc" id="L65">        return DataAccessUtils.singleResult(users);</span>
+    }
+
+    @Override
+    public List&lt;User&gt; getAll() {
+<span class="nc" id="L70">        return em.createNamedQuery(User.ALL_SORTED, User.class).getResultList();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span>TestAllPackages (30 окт. 2019 г. 11:48:36)</div></body></html>

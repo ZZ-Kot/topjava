@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>MealTo.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">TestAllPackages (30 окт. 2019 г. 11:48:36)</a> &gt; <a href="../../index.html" class="el_group">topjava</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">ru.javawebinar.topjava.to</a> &gt; <span class="el_source">MealTo.java</span></div><h1>MealTo.java</h1><pre class="source lang-java linenums">package ru.javawebinar.topjava.to;
+
+import java.time.LocalDateTime;
+
+public class MealTo {
+    private final Integer id;
+
+    private final LocalDateTime dateTime;
+
+    private final String description;
+
+    private final int calories;
+
+    private final boolean excess;
+
+<span class="nc" id="L16">    public MealTo(Integer id, LocalDateTime dateTime, String description, int calories, boolean excess) {</span>
+<span class="nc" id="L17">        this.id = id;</span>
+<span class="nc" id="L18">        this.dateTime = dateTime;</span>
+<span class="nc" id="L19">        this.description = description;</span>
+<span class="nc" id="L20">        this.calories = calories;</span>
+<span class="nc" id="L21">        this.excess = excess;</span>
+<span class="nc" id="L22">    }</span>
+
+    public Integer getId() {
+<span class="nc" id="L25">        return id;</span>
+    }
+
+    public LocalDateTime getDateTime() {
+<span class="nc" id="L29">        return dateTime;</span>
+    }
+
+    public String getDescription() {
+<span class="nc" id="L33">        return description;</span>
+    }
+
+    public int getCalories() {
+<span class="nc" id="L37">        return calories;</span>
+    }
+
+    public boolean isExcess() {
+<span class="nc" id="L41">        return excess;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L46">        return &quot;MealTo{&quot; +</span>
+<span class="nc" id="L47">                &quot;id=&quot; + id +</span>
+<span class="nc" id="L48">                &quot;, dateTime=&quot; + dateTime +</span>
+<span class="nc" id="L49">                &quot;, description='&quot; + description + '\'' +</span>
+<span class="nc" id="L50">                &quot;, calories=&quot; + calories +</span>
+<span class="nc" id="L51">                &quot;, excess=&quot; + excess +</span>
+<span class="nc" id="L52">                '}';</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span>TestAllPackages (30 окт. 2019 г. 11:48:36)</div></body></html>

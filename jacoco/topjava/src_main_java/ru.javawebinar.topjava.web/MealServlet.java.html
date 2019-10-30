@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>MealServlet.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">TestAllPackages (30 окт. 2019 г. 11:48:36)</a> &gt; <a href="../../index.html" class="el_group">topjava</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">ru.javawebinar.topjava.web</a> &gt; <span class="el_source">MealServlet.java</span></div><h1>MealServlet.java</h1><pre class="source lang-java linenums">package ru.javawebinar.topjava.web;
+
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.util.StringUtils;
+import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.web.meal.MealRestController;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Objects;
+
+import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalDate;
+import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
+
+<span class="nc" id="L24">public class MealServlet extends HttpServlet {</span>
+
+    private ConfigurableApplicationContext springContext;
+    private MealRestController mealController;
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+<span class="nc" id="L31">        super.init(config);</span>
+<span class="nc" id="L32">        springContext = new ClassPathXmlApplicationContext(&quot;spring/spring-app.xml&quot;, &quot;spring/spring-db.xml&quot;);</span>
+<span class="nc" id="L33">        mealController = springContext.getBean(MealRestController.class);</span>
+<span class="nc" id="L34">    }</span>
+
+    @Override
+    public void destroy() {
+<span class="nc" id="L38">        springContext.close();</span>
+<span class="nc" id="L39">        super.destroy();</span>
+<span class="nc" id="L40">    }</span>
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+<span class="nc" id="L44">        request.setCharacterEncoding(&quot;UTF-8&quot;);</span>
+<span class="nc" id="L45">        Meal meal = new Meal(</span>
+<span class="nc" id="L46">                LocalDateTime.parse(request.getParameter(&quot;dateTime&quot;)),</span>
+<span class="nc" id="L47">                request.getParameter(&quot;description&quot;),</span>
+<span class="nc" id="L48">                Integer.parseInt(request.getParameter(&quot;calories&quot;)));</span>
+
+<span class="nc bnc" id="L50" title="All 2 branches missed.">        if (StringUtils.isEmpty(request.getParameter(&quot;id&quot;))) {</span>
+<span class="nc" id="L51">            mealController.create(meal);</span>
+<span class="nc" id="L52">        } else {</span>
+<span class="nc" id="L53">            mealController.update(meal, getId(request));</span>
+        }
+<span class="nc" id="L55">        response.sendRedirect(&quot;meals&quot;);</span>
+<span class="nc" id="L56">    }</span>
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+<span class="nc" id="L60">        String action = request.getParameter(&quot;action&quot;);</span>
+
+<span class="nc bnc" id="L62" title="All 6 branches missed.">        switch (action == null ? &quot;all&quot; : action) {</span>
+            case &quot;delete&quot;:
+<span class="nc" id="L64">                int id = getId(request);</span>
+<span class="nc" id="L65">                mealController.delete(id);</span>
+<span class="nc" id="L66">                response.sendRedirect(&quot;meals&quot;);</span>
+<span class="nc" id="L67">                break;</span>
+            case &quot;create&quot;:
+            case &quot;update&quot;:
+<span class="nc bnc" id="L70" title="All 2 branches missed.">                final Meal meal = &quot;create&quot;.equals(action) ?</span>
+<span class="nc" id="L71">                        new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), &quot;&quot;, 1000) :</span>
+<span class="nc" id="L72">                        mealController.get(getId(request));</span>
+<span class="nc" id="L73">                request.setAttribute(&quot;meal&quot;, meal);</span>
+<span class="nc" id="L74">                request.getRequestDispatcher(&quot;/mealForm.jsp&quot;).forward(request, response);</span>
+<span class="nc" id="L75">                break;</span>
+            case &quot;filter&quot;:
+<span class="nc" id="L77">                LocalDate startDate = parseLocalDate(request.getParameter(&quot;startDate&quot;));</span>
+<span class="nc" id="L78">                LocalDate endDate = parseLocalDate(request.getParameter(&quot;endDate&quot;));</span>
+<span class="nc" id="L79">                LocalTime startTime = parseLocalTime(request.getParameter(&quot;startTime&quot;));</span>
+<span class="nc" id="L80">                LocalTime endTime = parseLocalTime(request.getParameter(&quot;endTime&quot;));</span>
+<span class="nc" id="L81">                request.setAttribute(&quot;meals&quot;, mealController.getBetween(startDate, startTime, endDate, endTime));</span>
+<span class="nc" id="L82">                request.getRequestDispatcher(&quot;/meals.jsp&quot;).forward(request, response);</span>
+<span class="nc" id="L83">                break;</span>
+            case &quot;all&quot;:
+            default:
+<span class="nc" id="L86">                request.setAttribute(&quot;meals&quot;, mealController.getAll());</span>
+<span class="nc" id="L87">                request.getRequestDispatcher(&quot;/meals.jsp&quot;).forward(request, response);</span>
+                break;
+        }
+<span class="nc" id="L90">    }</span>
+
+    private int getId(HttpServletRequest request) {
+<span class="nc" id="L93">        String paramId = Objects.requireNonNull(request.getParameter(&quot;id&quot;));</span>
+<span class="nc" id="L94">        return Integer.parseInt(paramId);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span>TestAllPackages (30 окт. 2019 г. 11:48:36)</div></body></html>

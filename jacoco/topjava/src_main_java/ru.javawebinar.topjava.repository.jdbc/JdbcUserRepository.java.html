@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>JdbcUserRepository.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">TestAllPackages (30 окт. 2019 г. 11:48:36)</a> &gt; <a href="../../index.html" class="el_group">topjava</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">ru.javawebinar.topjava.repository.jdbc</a> &gt; <span class="el_source">JdbcUserRepository.java</span></div><h1>JdbcUserRepository.java</h1><pre class="source lang-java linenums">package ru.javawebinar.topjava.repository.jdbc;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.support.DataAccessUtils;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Repository;
+import ru.javawebinar.topjava.model.User;
+import ru.javawebinar.topjava.repository.UserRepository;
+
+import java.util.List;
+
+@Repository
+public class JdbcUserRepository implements UserRepository {
+
+<span class="nc" id="L19">    private static final BeanPropertyRowMapper&lt;User&gt; ROW_MAPPER = BeanPropertyRowMapper.newInstance(User.class);</span>
+
+    private final JdbcTemplate jdbcTemplate;
+
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    private final SimpleJdbcInsert insertUser;
+
+    @Autowired
+<span class="nc" id="L28">    public JdbcUserRepository(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {</span>
+<span class="nc" id="L29">        this.insertUser = new SimpleJdbcInsert(jdbcTemplate)</span>
+<span class="nc" id="L30">                .withTableName(&quot;users&quot;)</span>
+<span class="nc" id="L31">                .usingGeneratedKeyColumns(&quot;id&quot;);</span>
+
+<span class="nc" id="L33">        this.jdbcTemplate = jdbcTemplate;</span>
+<span class="nc" id="L34">        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;</span>
+<span class="nc" id="L35">    }</span>
+
+    @Override
+    public User save(User user) {
+<span class="nc" id="L39">        BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(user);</span>
+
+<span class="nc bnc" id="L41" title="All 2 branches missed.">        if (user.isNew()) {</span>
+<span class="nc" id="L42">            Number newKey = insertUser.executeAndReturnKey(parameterSource);</span>
+<span class="nc" id="L43">            user.setId(newKey.intValue());</span>
+<span class="nc bnc" id="L44" title="All 2 branches missed.">        } else if (namedParameterJdbcTemplate.update(</span>
+<span class="nc" id="L45">                &quot;UPDATE users SET name=:name, email=:email, password=:password, &quot; +</span>
+<span class="nc" id="L46">                        &quot;registered=:registered, enabled=:enabled, calories_per_day=:caloriesPerDay WHERE id=:id&quot;, parameterSource) == 0) {</span>
+<span class="nc" id="L47">            return null;</span>
+        }
+<span class="nc" id="L49">        return user;</span>
+    }
+
+    @Override
+    public boolean delete(int id) {
+<span class="nc bnc" id="L54" title="All 2 branches missed.">        return jdbcTemplate.update(&quot;DELETE FROM users WHERE id=?&quot;, id) != 0;</span>
+    }
+
+    @Override
+    public User get(int id) {
+<span class="nc" id="L59">        List&lt;User&gt; users = jdbcTemplate.query(&quot;SELECT * FROM users WHERE id=?&quot;, ROW_MAPPER, id);</span>
+<span class="nc" id="L60">        return DataAccessUtils.singleResult(users);</span>
+    }
+
+    @Override
+    public User getByEmail(String email) {
+//        return jdbcTemplate.queryForObject(&quot;SELECT * FROM users WHERE email=?&quot;, ROW_MAPPER, email);
+<span class="nc" id="L66">        List&lt;User&gt; users = jdbcTemplate.query(&quot;SELECT * FROM users WHERE email=?&quot;, ROW_MAPPER, email);</span>
+<span class="nc" id="L67">        return DataAccessUtils.singleResult(users);</span>
+    }
+
+    @Override
+    public List&lt;User&gt; getAll() {
+<span class="nc" id="L72">        return jdbcTemplate.query(&quot;SELECT * FROM users ORDER BY name, email&quot;, ROW_MAPPER);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span>TestAllPackages (30 окт. 2019 г. 11:48:36)</div></body></html>

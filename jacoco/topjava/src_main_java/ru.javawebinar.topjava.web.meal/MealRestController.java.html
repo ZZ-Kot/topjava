@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>MealRestController.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">TestAllPackages (30 окт. 2019 г. 11:48:36)</a> &gt; <a href="../../index.html" class="el_group">topjava</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">ru.javawebinar.topjava.web.meal</a> &gt; <span class="el_source">MealRestController.java</span></div><h1>MealRestController.java</h1><pre class="source lang-java linenums">package ru.javawebinar.topjava.web.meal;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Controller;
+import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.service.MealService;
+import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.util.MealsUtil;
+import ru.javawebinar.topjava.web.SecurityUtil;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+
+import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
+import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
+
+@Controller
+public class MealRestController {
+<span class="fc" id="L23">    private static final Logger log = LoggerFactory.getLogger(MealRestController.class);</span>
+
+    private final MealService service;
+
+    @Autowired
+<span class="fc" id="L28">    public MealRestController(MealService service) {</span>
+<span class="fc" id="L29">        this.service = service;</span>
+<span class="fc" id="L30">    }</span>
+
+    public Meal get(int id) {
+<span class="nc" id="L33">        int userId = SecurityUtil.authUserId();</span>
+<span class="nc" id="L34">        log.info(&quot;get meal {} for user {}&quot;, id, userId);</span>
+<span class="nc" id="L35">        return service.get(id, userId);</span>
+    }
+
+    public void delete(int id) {
+<span class="nc" id="L39">        int userId = SecurityUtil.authUserId();</span>
+<span class="nc" id="L40">        log.info(&quot;delete meal {} for user {}&quot;, id, userId);</span>
+<span class="nc" id="L41">        service.delete(id, userId);</span>
+<span class="nc" id="L42">    }</span>
+
+    public List&lt;MealTo&gt; getAll() {
+<span class="nc" id="L45">        int userId = SecurityUtil.authUserId();</span>
+<span class="nc" id="L46">        log.info(&quot;getAll for user {}&quot;, userId);</span>
+<span class="nc" id="L47">        return MealsUtil.getTos(service.getAll(userId), SecurityUtil.authUserCaloriesPerDay());</span>
+    }
+
+    public Meal create(Meal meal) {
+<span class="nc" id="L51">        int userId = SecurityUtil.authUserId();</span>
+<span class="nc" id="L52">        checkNew(meal);</span>
+<span class="nc" id="L53">        log.info(&quot;create {} for user {}&quot;, meal, userId);</span>
+<span class="nc" id="L54">        return service.create(meal, userId);</span>
+    }
+
+    public void update(Meal meal, int id) {
+<span class="nc" id="L58">        int userId = SecurityUtil.authUserId();</span>
+<span class="nc" id="L59">        assureIdConsistent(meal, id);</span>
+<span class="nc" id="L60">        log.info(&quot;update {} for user {}&quot;, meal, userId);</span>
+<span class="nc" id="L61">        service.update(meal, userId);</span>
+<span class="nc" id="L62">    }</span>
+
+    /**
+     * &lt;ol&gt;Filter separately
+     * &lt;li&gt;by date&lt;/li&gt;
+     * &lt;li&gt;by time for every date&lt;/li&gt;
+     * &lt;/ol&gt;
+     */
+    public List&lt;MealTo&gt; getBetween(@Nullable LocalDate startDate, @Nullable LocalTime startTime,
+                                   @Nullable LocalDate endDate, @Nullable LocalTime endTime) {
+<span class="nc" id="L72">        int userId = SecurityUtil.authUserId();</span>
+<span class="nc" id="L73">        log.info(&quot;getBetween dates({} - {}) time({} - {}) for user {}&quot;, startDate, endDate, startTime, endTime, userId);</span>
+
+<span class="nc" id="L75">        List&lt;Meal&gt; mealsDateFiltered = service.getBetweenDates(startDate, endDate, userId);</span>
+<span class="nc" id="L76">        return MealsUtil.getFilteredTos(mealsDateFiltered, SecurityUtil.authUserCaloriesPerDay(), startTime, endTime);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span>TestAllPackages (30 окт. 2019 г. 11:48:36)</div></body></html>

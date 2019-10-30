@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>ValidationUtil.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">TestAllPackages (30 окт. 2019 г. 11:48:36)</a> &gt; <a href="../../index.html" class="el_group">topjava</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">ru.javawebinar.topjava.util</a> &gt; <span class="el_source">ValidationUtil.java</span></div><h1>ValidationUtil.java</h1><pre class="source lang-java linenums">package ru.javawebinar.topjava.util;
+
+
+import ru.javawebinar.topjava.model.AbstractBaseEntity;
+import ru.javawebinar.topjava.util.exception.NotFoundException;
+
+public class ValidationUtil {
+
+    private ValidationUtil() {
+    }
+
+    public static &lt;T&gt; T checkNotFoundWithId(T object, int id) {
+<span class="nc" id="L13">        return checkNotFound(object, &quot;id=&quot; + id);</span>
+    }
+
+    public static void checkNotFoundWithId(boolean found, int id) {
+<span class="fc" id="L17">        checkNotFound(found, &quot;id=&quot; + id);</span>
+<span class="fc" id="L18">    }</span>
+
+    public static &lt;T&gt; T checkNotFound(T object, String msg) {
+<span class="nc bnc" id="L21" title="All 2 branches missed.">        checkNotFound(object != null, msg);</span>
+<span class="nc" id="L22">        return object;</span>
+    }
+
+    public static void checkNotFound(boolean found, String msg) {
+<span class="fc bfc" id="L26" title="All 2 branches covered.">        if (!found) {</span>
+<span class="fc" id="L27">            throw new NotFoundException(&quot;Not found entity with &quot; + msg);</span>
+        }
+<span class="fc" id="L29">    }</span>
+
+    public static void checkNew(AbstractBaseEntity entity) {
+<span class="nc bnc" id="L32" title="All 2 branches missed.">        if (!entity.isNew()) {</span>
+<span class="nc" id="L33">            throw new IllegalArgumentException(entity + &quot; must be new (id=null)&quot;);</span>
+        }
+<span class="nc" id="L35">    }</span>
+
+    public static void assureIdConsistent(AbstractBaseEntity entity, int id) {
+//      conservative when you reply, but accept liberally (http://stackoverflow.com/a/32728226/548473)
+<span class="nc bnc" id="L39" title="All 2 branches missed.">        if (entity.isNew()) {</span>
+<span class="nc" id="L40">            entity.setId(id);</span>
+<span class="nc bnc" id="L41" title="All 2 branches missed.">        } else if (entity.getId() != id) {</span>
+<span class="nc" id="L42">            throw new IllegalArgumentException(entity + &quot; must be with id=&quot; + id);</span>
+        }
+<span class="nc" id="L44">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span>TestAllPackages (30 окт. 2019 г. 11:48:36)</div></body></html>

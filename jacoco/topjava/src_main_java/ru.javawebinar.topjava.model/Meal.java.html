@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>Meal.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">TestAllPackages (30 окт. 2019 г. 11:48:36)</a> &gt; <a href="../../index.html" class="el_group">topjava</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">ru.javawebinar.topjava.model</a> &gt; <span class="el_source">Meal.java</span></div><h1>Meal.java</h1><pre class="source lang-java linenums">package ru.javawebinar.topjava.model;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+/*
+ * 1: Сделать из Meal Hibernate entity
+ * */
+@NamedQueries({
+	@NamedQuery(name = Meal.UPDATE, query = &quot;UPDATE&quot;
+												+ &quot; Meal m&quot;
+										+ &quot; SET&quot;
+												+ &quot; m.calories = :calories&quot;
+												+ &quot; AND m.description = :description&quot;
+												+ &quot; AND m.dateTime = :date_time&quot;
+										+ &quot; WHERE&quot;
+												+ &quot; m.id = :id&quot;
+												+ &quot; AND m.user.id = :user_id&quot;),
+	@NamedQuery(name = Meal.GET_ONE, query = &quot;SELECT m FROM Meal m WHERE m.id=?1 AND m.user.id=?2&quot;),
+    @NamedQuery(name = Meal.DELETE, query = &quot;DELETE FROM Meal m WHERE m.id=:id AND m.user.id=:user_id&quot;),
+    @NamedQuery(name = Meal.BETWEEN, query = &quot;SELECT m FROM Meal m WHERE m.dateTime BETWEEN ?1 AND ?2 AND m.user.id=?3&quot;),
+    @NamedQuery(name = Meal.ALL_SORTED, query = &quot;SELECT m FROM Meal m ORDER BY m.id&quot;),
+})
+@Entity
+@Table(name = &quot;meals&quot;, uniqueConstraints = {@UniqueConstraint(columnNames = {&quot;user_id&quot;, &quot;date_time&quot;}, name = &quot;meals_unique_user_datetime_idx&quot;)})
+public class Meal extends AbstractBaseEntity {
+
+	public static final String UPDATE = &quot;Meal.update&quot;;
+	public static final String GET_ONE = &quot;Meal.getOne&quot;;
+    public static final String DELETE = &quot;Meal.delete&quot;;
+    public static final String BETWEEN = &quot;Meal.getBetween&quot;;
+    public static final String ALL_SORTED = &quot;Meal.getAllSorted&quot;;
+
+    
+	@NotNull
+	@Column(name = &quot;date_time&quot;, nullable = false, unique = true, columnDefinition = &quot;timestamp default now()&quot;)
+	private LocalDateTime dateTime;
+
+	@NotBlank
+	@Size(min = 5, max = 100)
+	@Column(name = &quot;description&quot;, nullable = false)
+    private String description;
+
+	@NotNull
+	@Column(name = &quot;calories&quot;, nullable = false)
+    private int calories;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = &quot;user_id&quot;)
+    private User user;
+
+    
+<span class="fc" id="L67">    public Meal() {</span>
+<span class="fc" id="L68">    }</span>
+
+    public Meal(LocalDateTime dateTime, String description, int calories) {
+<span class="nc" id="L71">        this(null, dateTime, description, calories);</span>
+<span class="nc" id="L72">    }</span>
+
+    public Meal(Integer id, LocalDateTime dateTime, String description, int calories) {
+<span class="nc" id="L75">        super(id);</span>
+<span class="nc" id="L76">        this.dateTime = dateTime;</span>
+<span class="nc" id="L77">        this.description = description;</span>
+<span class="nc" id="L78">        this.calories = calories;</span>
+<span class="nc" id="L79">    }</span>
+
+    
+    public LocalDateTime getDateTime() {
+<span class="nc" id="L83">        return dateTime;</span>
+    }
+
+    public String getDescription() {
+<span class="nc" id="L87">        return description;</span>
+    }
+
+    public int getCalories() {
+<span class="nc" id="L91">        return calories;</span>
+    }
+
+    public LocalDate getDate() {
+<span class="nc" id="L95">        return dateTime.toLocalDate();</span>
+    }
+
+    public LocalTime getTime() {
+<span class="nc" id="L99">        return dateTime.toLocalTime();</span>
+    }
+
+    public void setDateTime(LocalDateTime dateTime) {
+<span class="nc" id="L103">        this.dateTime = dateTime;</span>
+<span class="nc" id="L104">    }</span>
+
+    public void setDescription(String description) {
+<span class="nc" id="L107">        this.description = description;</span>
+<span class="nc" id="L108">    }</span>
+
+    public void setCalories(int calories) {
+<span class="nc" id="L111">        this.calories = calories;</span>
+<span class="nc" id="L112">    }</span>
+
+    public User getUser() {
+<span class="nc" id="L115">        return user;</span>
+    }
+
+    public void setUser(User user) {
+<span class="nc" id="L119">        this.user = user;</span>
+<span class="nc" id="L120">    }</span>
+
+    @Override
+    public String toString() {
+<span class="nc" id="L124">        return &quot;Meal{&quot; +</span>
+<span class="nc" id="L125">                &quot;id=&quot; + id +</span>
+<span class="nc" id="L126">                &quot;, dateTime=&quot; + dateTime +</span>
+<span class="nc" id="L127">                &quot;, description='&quot; + description + '\'' +</span>
+<span class="nc" id="L128">                &quot;, calories=&quot; + calories +</span>
+<span class="nc" id="L129">                '}';</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span>TestAllPackages (30 окт. 2019 г. 11:48:36)</div></body></html>

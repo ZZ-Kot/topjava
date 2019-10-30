@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>JdbcMealRepository.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">TestAllPackages (30 окт. 2019 г. 11:48:36)</a> &gt; <a href="../../index.html" class="el_group">topjava</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">ru.javawebinar.topjava.repository.jdbc</a> &gt; <span class="el_source">JdbcMealRepository.java</span></div><h1>JdbcMealRepository.java</h1><pre class="source lang-java linenums">package ru.javawebinar.topjava.repository.jdbc;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.support.DataAccessUtils;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Repository;
+import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.repository.MealRepository;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Repository
+public class JdbcMealRepository implements MealRepository {
+
+<span class="nc" id="L21">    private static final RowMapper&lt;Meal&gt; ROW_MAPPER = BeanPropertyRowMapper.newInstance(Meal.class);</span>
+
+    private final JdbcTemplate jdbcTemplate;
+
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    private final SimpleJdbcInsert insertMeal;
+
+    @Autowired
+<span class="nc" id="L30">    public JdbcMealRepository(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {</span>
+<span class="nc" id="L31">        this.insertMeal = new SimpleJdbcInsert(jdbcTemplate)</span>
+<span class="nc" id="L32">                .withTableName(&quot;meals&quot;)</span>
+<span class="nc" id="L33">                .usingGeneratedKeyColumns(&quot;id&quot;);</span>
+
+<span class="nc" id="L35">        this.jdbcTemplate = jdbcTemplate;</span>
+<span class="nc" id="L36">        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;</span>
+<span class="nc" id="L37">    }</span>
+
+    @Override
+    public Meal save(Meal meal, int userId) {
+<span class="nc" id="L41">        MapSqlParameterSource map = new MapSqlParameterSource()</span>
+<span class="nc" id="L42">                .addValue(&quot;id&quot;, meal.getId())</span>
+<span class="nc" id="L43">                .addValue(&quot;description&quot;, meal.getDescription())</span>
+<span class="nc" id="L44">                .addValue(&quot;calories&quot;, meal.getCalories())</span>
+<span class="nc" id="L45">                .addValue(&quot;date_time&quot;, meal.getDateTime())</span>
+<span class="nc" id="L46">                .addValue(&quot;user_id&quot;, userId);</span>
+
+<span class="nc bnc" id="L48" title="All 2 branches missed.">        if (meal.isNew()) {</span>
+<span class="nc" id="L49">            Number newId = insertMeal.executeAndReturnKey(map);</span>
+<span class="nc" id="L50">            meal.setId(newId.intValue());</span>
+<span class="nc" id="L51">        } else {</span>
+<span class="nc bnc" id="L52" title="All 2 branches missed.">            if (namedParameterJdbcTemplate.update(&quot;&quot; +</span>
+                            &quot;UPDATE meals &quot; +
+                            &quot;   SET description=:description, calories=:calories, date_time=:date_time &quot; +
+                            &quot; WHERE id=:id AND user_id=:user_id&quot;
+<span class="nc" id="L56">                    , map) == 0) {</span>
+<span class="nc" id="L57">                return null;</span>
+            }
+        }
+<span class="nc" id="L60">        return meal;</span>
+    }
+
+    @Override
+    public boolean delete(int id, int userId) {
+<span class="nc bnc" id="L65" title="All 2 branches missed.">        return jdbcTemplate.update(&quot;DELETE FROM meals WHERE id=? AND user_id=?&quot;, id, userId) != 0;</span>
+    }
+
+    @Override
+    public Meal get(int id, int userId) {
+<span class="nc" id="L70">        List&lt;Meal&gt; meals = jdbcTemplate.query(</span>
+<span class="nc" id="L71">                &quot;SELECT * FROM meals WHERE id = ? AND user_id = ?&quot;, ROW_MAPPER, id, userId);</span>
+<span class="nc" id="L72">        return DataAccessUtils.singleResult(meals);</span>
+    }
+
+    @Override
+    public List&lt;Meal&gt; getAll(int userId) {
+<span class="nc" id="L77">        return jdbcTemplate.query(</span>
+<span class="nc" id="L78">                &quot;SELECT * FROM meals WHERE user_id=? ORDER BY date_time DESC&quot;, ROW_MAPPER, userId);</span>
+    }
+
+    @Override
+    public List&lt;Meal&gt; getBetween(LocalDateTime startDate, LocalDateTime endDate, int userId) {
+<span class="nc" id="L83">        return jdbcTemplate.query(</span>
+<span class="nc" id="L84">                &quot;SELECT * FROM meals WHERE user_id=?  AND date_time BETWEEN  ? AND ? ORDER BY date_time DESC&quot;,</span>
+<span class="nc" id="L85">                ROW_MAPPER, userId, startDate, endDate);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span>TestAllPackages (30 окт. 2019 г. 11:48:36)</div></body></html>
