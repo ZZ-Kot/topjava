@@ -16,6 +16,11 @@ import java.util.Collection;
 
 import static ru.javawebinar.topjava.UserTestData.ADMIN;
 
+/*
+ * 1.1 Починить тесты InMemoryAdminRestControllerSpringTest/InMemoryAdminRestControllerTest
+ * (добавлять spring-mvc.xml в контекст не стоит, т.к. в новой версии Spring для этого
+ * требуется WebApplicationContext. Можно просто поправить inmemory.xml)
+ * */
 @ContextConfiguration({"classpath:spring/spring-app.xml", "classpath:spring/inmemory.xml"})
 @RunWith(SpringRunner.class)
 public class InMemoryAdminRestControllerSpringTest {

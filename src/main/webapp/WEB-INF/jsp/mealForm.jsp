@@ -1,11 +1,5 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<jsp:include page="fragments/mealHeader.jsp"/>			
 
-<html>
-<head>
-    <title>Meal</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
 <body>
 <section>
     <h3><a href="index.html">Home</a></h3>
