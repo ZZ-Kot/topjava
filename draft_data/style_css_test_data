@@ -1,0 +1,67 @@
+MockHttpServletRequest:
+      HTTP Method = GET
+      Request URI = /resources/css/style.css
+       Parameters = {}
+          Headers = []
+             Body = null
+    Session Attrs = {}
+
+Handler:
+             Type = org.springframework.web.servlet.resource.ResourceHttpRequestHandler
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 200
+    Error message = null
+          Headers = [Last-Modified:"Sat, 16 Nov 2019 15:04:50 GMT", Content-Length:"507", Content-Type:"text/css;charset=UTF-8", Accept-Ranges:"bytes"]
+     Content type = text/css
+             Body = dl {
+    background: none repeat scroll 0 0 #FAFAFA;
+    margin: 8px 0;
+    padding: 0;
+}
+
+dt {
+    display: inline-block;
+    width: 170px;
+}
+
+dd {
+    display: inline-block;
+    margin-left: 8px;
+    vertical-align: top;
+}
+
+tr[data-mealExcess="false"] {
+    color: green;
+}
+
+tr[data-mealExcess="true"] {
+    color: red;
+}
+
+header, footer {
+    background: none repeat scroll 0 0 #A6C9E2;
+    color: #2E6E9E;
+    font-size: 20px;
+    padding: 5px 20px;
+    margin: 6px 0;
+}
+
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []

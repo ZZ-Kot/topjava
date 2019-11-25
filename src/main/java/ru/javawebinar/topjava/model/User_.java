@@ -7,7 +7,7 @@ import javax.persistence.metamodel.SetAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="Dali", date="2019-11-17T10:29:46.263+0200")
+@Generated(value="Dali", date="2019-11-23T17:46:05.245+0200")
 @StaticMetamodel(User.class)
 public class User_ extends AbstractNamedEntity_ {
 	public static volatile SingularAttribute<User, String> email;
