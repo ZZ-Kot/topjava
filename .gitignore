@@ -10,3 +10,4 @@ log
 /.project
 /.settings/
 .sts4-cache
+/bin/
