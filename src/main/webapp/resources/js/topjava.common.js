@@ -44,10 +44,11 @@ function updateTableByData(data) {
 }
 
 function save() {
+//	closeNoty();
     $.ajax({
-        type: "POST",
-        url: context.ajaxUrl,
-        data: form.serialize()
+    	  url: context.ajaxUrl
+        , data: form.serialize()
+        , method: "POST"
     }).done(function () {
         $("#editRow").modal("hide");
         context.updateTable();
@@ -65,7 +66,7 @@ function closeNoty() {
 }
 
 function successNoty(key) {
-    closeNoty();
+//    closeNoty();
     new Noty({
         text: "<span class='fa fa-lg fa-check'></span> &nbsp;" + i18n[key],
         type: 'success',

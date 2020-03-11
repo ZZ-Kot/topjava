@@ -3,7 +3,10 @@ package ru.javawebinar.topjava.service;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.validation.ConstraintViolationException;
@@ -44,9 +47,15 @@ public abstract class AbstractMealServiceTest extends AbstractServiceTest {
     @Test
     void create() throws Exception {
         Meal newMeal = getNew();
+        User newUser = UserTestData.getNew(); 
+
+        newMeal.setUser(newUser);
+        
         Meal created = service.create(newMeal, USER_ID);
         Integer newId = created.getId();
+        
         newMeal.setId(newId);
+
         assertMatch(created, newMeal);
         assertMatch(service.get(newId, USER_ID), newMeal);
     }
@@ -72,13 +81,22 @@ public abstract class AbstractMealServiceTest extends AbstractServiceTest {
     @Test
     void update() throws Exception {
         Meal updated = getUpdated();
+        User newUser = UserTestData.getNew(); 
+
+        updated.setUser(newUser);
+        
         service.update(updated, USER_ID);
         assertMatch(service.get(MEAL1_ID, USER_ID), updated);
     }
 
     @Test
     void updateNotFound() throws Exception {
-        NotFoundException e = assertThrows(NotFoundException.class, () -> service.update(MEAL1, ADMIN_ID));
+        Meal updated = MEAL1;
+        User newUser = UserTestData.getNew(); 
+
+        updated.setUser(newUser);
+    	
+        NotFoundException e = assertThrows(NotFoundException.class, () -> service.update(updated, ADMIN_ID));
         assertEquals(e.getMessage(), "Not found entity with id=" + MEAL1_ID);
     }
 

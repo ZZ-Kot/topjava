@@ -1,9 +1,5 @@
 package ru.javawebinar.topjava.util;
 
-import org.springframework.lang.Nullable;
-import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.to.MealTo;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Collection;
@@ -12,10 +8,19 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.springframework.lang.Nullable;
+
+import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.to.MealTo;
+
 public class MealsUtil {
 
     private MealsUtil() {
     }
+
+	public static Meal createNewFromTo(MealTo mealTo) {
+		return new Meal(null, mealTo.getDateTime(), mealTo.getDescription(), mealTo.getCalories());
+	}
 
     public static List<MealTo> getTos(Collection<Meal> meals, int caloriesPerDay) {
         return getFiltered(meals, caloriesPerDay, meal -> true);
@@ -40,4 +45,12 @@ public class MealsUtil {
     public static MealTo createTo(Meal meal, boolean excess) {
         return new MealTo(meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories(), excess);
     }
+
+    public static Meal updateFromTo(Meal meal, MealTo mealTo) {
+        meal.setDateTime(mealTo.getDateTime());
+        meal.setDescription(mealTo.getDescription().toLowerCase());
+        meal.setCalories(mealTo.getCalories());
+        return meal;
+    }
+
 }
