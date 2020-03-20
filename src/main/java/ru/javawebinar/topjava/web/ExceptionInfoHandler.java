@@ -1,5 +1,14 @@
 package ru.javawebinar.topjava.web;
 
+import static ru.javawebinar.topjava.util.exception.ErrorType.APP_ERROR;
+import static ru.javawebinar.topjava.util.exception.ErrorType.DATA_ERROR;
+import static ru.javawebinar.topjava.util.exception.ErrorType.DATA_NOT_FOUND;
+import static ru.javawebinar.topjava.util.exception.ErrorType.DUPLICATE_EMAIL;
+import static ru.javawebinar.topjava.util.exception.ErrorType.NO_CONTENT;
+import static ru.javawebinar.topjava.util.exception.ErrorType.VALIDATION_ERROR;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
@@ -12,20 +21,31 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
 import ru.javawebinar.topjava.util.ValidationUtil;
+import ru.javawebinar.topjava.util.exception.DuplicateEmailException;
 import ru.javawebinar.topjava.util.exception.ErrorInfo;
 import ru.javawebinar.topjava.util.exception.ErrorType;
 import ru.javawebinar.topjava.util.exception.IllegalRequestDataException;
+import ru.javawebinar.topjava.util.exception.NoContentException;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
-
-import javax.servlet.http.HttpServletRequest;
-
-import static ru.javawebinar.topjava.util.exception.ErrorType.*;
 
 @RestControllerAdvice(annotations = RestController.class)
 @Order(Ordered.HIGHEST_PRECEDENCE + 5)
 public class ExceptionInfoHandler {
     private static Logger log = LoggerFactory.getLogger(ExceptionInfoHandler.class);
+    
+    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
+    @ExceptionHandler(DuplicateEmailException.class)
+    public ErrorInfo handleError(HttpServletRequest req, DuplicateEmailException e) {
+        return logAndGetErrorInfo(req, e, false, DUPLICATE_EMAIL);
+    }
+    
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @ExceptionHandler(NoContentException.class)
+    public ErrorInfo handleError(HttpServletRequest req, NoContentException e) {
+        return logAndGetErrorInfo(req, e, false, NO_CONTENT);
+    }
 
     //  http://stackoverflow.com/a/22358422/548473
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)

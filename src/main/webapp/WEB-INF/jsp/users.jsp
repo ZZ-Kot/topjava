@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <html>
 <jsp:include page="fragments/headTag.jsp"/>
@@ -41,27 +42,43 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-                <form id="detailsForm">
+                <form:form id="detailsForm" modelAttribute="userForm">
                     <input type="hidden" id="id" name="id">
 
-                    <div class="form-group">
-                        <label for="name" class="col-form-label"><spring:message code="user.name"/></label>
-                        <input type="text" class="form-control" id="name" name="name"
-                               placeholder="<spring:message code="user.name"/>">
-                    </div>
+					<spring:bind path="name">
+	                    <div class="form-group">
+	                        <label for="name" class="col-form-label"><spring:message code="user.name"/></label>
+	                        <form:input
+	                        
+	                          path="name"
+ 	                          type="text"
+	                          class="form-control"
+	                          id="name"
+	                          name="name"
+	                          placeholder="<spring:message code=\"user.name\"/>"
+	                          />
+                            <form:errors path="name"/>
+	                    </div>
+                    </spring:bind>
 
-                    <div class="form-group">
-                        <label for="email" class="col-form-label"><spring:message code="user.email"/></label>
-                        <input type="email" class="form-control" id="email" name="email"
-                               placeholder="<spring:message code="user.email"/>">
-                    </div>
+					<spring:bind path="name">
+	                    <div class="form-group">
+	                        <label for="email" class="col-form-label"><spring:message code="user.email"/></label>
+	                        <form:input path="email" type="email" class="form-control" id="email" name="email"
+	                               placeholder='<spring:message code="user.email"/>'/>
+                            <form:errors path="email"/>
+	                    </div>
+                    </spring:bind>
 
-                    <div class="form-group">
-                        <label for="password" class="col-form-label"><spring:message code="user.password"/></label>
-                        <input type="password" class="form-control" id="password" name="password"
-                               placeholder="<spring:message code="user.password"/>">
-                    </div>
-                </form>
+					<spring:bind path="name">
+	                    <div class="form-group">
+	                        <label for="password" class="col-form-label"><spring:message code="user.password"/></label>
+	                        <form:input path="password" type="password" class="form-control" id="password" name="password"
+	                               placeholder='<spring:message code="user.password"/>'/>
+                            <form:errors path="password"/>
+	                    </div>
+                    </spring:bind>
+                </form:form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">
